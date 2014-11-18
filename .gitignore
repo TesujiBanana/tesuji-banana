@@ -1,3 +1,6 @@
+# Mac metadata
+.DS_Store
+
 # Logs
 logs
 *.log
@@ -13,12 +16,13 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
+# Temp
+tmp
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
-dist/js/bundle.js
+dist/js
+dist/css
 
 # Dependency directory
 # Commenting this out is preferred by some people, see

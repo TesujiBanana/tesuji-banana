@@ -7,27 +7,47 @@ var connect = require('gulp-connect');
 var reactify = require('reactify');
 var watchify = require('watchify');
 var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
 var mocha = require('gulp-mocha');
 var mochify = require('mochify');
+var sourcemaps = require('gulp-sourcemaps');
+var sass = require('gulp-sass');
+var concat = require('gulp-concat');
 
 gulp.task('build', function() {
   
 });
 
 gulp.task('watch', function() {
-  var bundler = watchify(browserify('./src/app.js', watchify.args));
+  var bundler = browserify({
+    entries: ['./src/js/app.js'],
+    transform: [reactify],
+    debug: true,
+    cache: {}, packageCache: {}, fullPaths: true
+  })
   
-  bundler.transform(reactify);
+  var watcher = watchify(bundler);
+  
   bundler.on('update', rebundle);
   
   function rebundle() {
-    return bundler.bundle()
+    return watcher.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe(source('bundle.js'))
       .pipe(gulp.dest('./dist/js'));
   }
   
+  gulp.watch('./src/sass/**/*.scss', ['sass']);
+  
   return rebundle();
+});
+
+gulp.task('sass', function() {
+  gulp.src('./src/sass/**/*.scss')
+    .pipe(sass())
+    .pipe(gulp.dest('./tmp/css'))
+    .pipe(concat('app.css'))
+    .pipe(gulp.dest('./dist/css'));
 });
 
 gulp.task('serve', function() {
@@ -53,4 +73,4 @@ gulp.task('watch-mocha', function() {
     gulp.watch(['src/**', 'test/**'], ['mocha']);
 });
 
-gulp.task('default', ['serve', 'watch']);
+gulp.task('default', ['serve', 'watch', 'sass']);
