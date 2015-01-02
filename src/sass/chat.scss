@@ -1,46 +1,50 @@
 .chat-panel {
-  position: relative;
-  height: 400px;
-  
-  .panel-body {
-    height: 100%;
-    clear: both;
-    padding-bottom: 54px;
-    
-    .list-group {
-      // height: 320px;
-      height: 100%;
-      overflow: scroll;
-      clear: both;
-      border: 0px;
-      
-      .list-group-item {
-        border: 0px;
-        white-space: pre-wrap;
-      }
-    }
-  }
-  
-  .panel-footer {
-    // background-color: white;
-    position: absolute;
-    bottom: 0px;
-    height: 54px;
-    width: 100%;
-    float: bottom;
-    
-    div {
-      position: relative;
-      width: 100%;
-    }
-    textarea {
-      resize: none;
-      overflow-y: scroll;
-      min-height: 34px;
-      max-height: 200px;
-      position: absolute;
-      width: inherit;
-      bottom: -34px;
-    }
-  }
+  // position: absolute;
+  // bottom: 0px;
+  // height: 240px;
+  // width: 100%;
+  // margin-bottom: 0px;
+  // border-top: 1px solid #ddd;
+  // border-radius: 0px;
+  // 
+  // .panel-body {
+  //   height: 100%;
+  //   clear: both;
+  //   padding-top: 0px;
+  //   padding-bottom: 54px;
+  //   
+  //   .list-group {
+  //     height: 100%;
+  //     overflow: scroll;
+  //     clear: both;
+  //     border: 0px;
+  //     
+  //     .list-group-item {
+  //       border: 0px;
+  //       white-space: pre-wrap;
+  //     }
+  //   }
+  // }
+  // 
+  // .panel-footer {
+  //   position: absolute;
+  //   bottom: 0px;
+  //   height: 54px;
+  //   width: 100%;
+  //   float: bottom;
+  //   
+  //   div {
+  //     position: relative;
+  //     width: 100%;
+  //   }
+  //   textarea {
+  //     resize: none;
+  //     overflow-y: scroll;
+  //     min-height: 34px;
+  //     max-height: 200px;
+  //     position: absolute;
+  //     width: inherit;
+  //     bottom: -34px;
+  //   }
+  // }
 }

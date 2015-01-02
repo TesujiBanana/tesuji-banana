@@ -1,16 +1,19 @@
 "use strict";
 
 var React = require("react");
-var ChatView = require("./chat_view.jsx");
-var GamesView = require("./games_view.jsx");
+
+var MessagesView = require("./messages_view.jsx");
+var NewMessageView = require("./new_message_view.jsx");
 
 var RoomView = React.createClass({
 
   render: function() {
     return(
-      <div className="row">
-        <GamesView room={this.props.room} />
-        <ChatView room={this.props.room} />
+      <div className="col-md-10">
+        <div className="row chat-panel">
+          <MessagesView room={this.props.room} key={this.props.room}/>
+          <NewMessageView room={this.props.room} />
+        </div>
       </div>
     );
   }

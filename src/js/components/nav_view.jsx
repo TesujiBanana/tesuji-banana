@@ -2,27 +2,24 @@
 
 var React = require('react');
 
-var AuthDropdownView = require('./auth_dropdown_view.jsx');
+var RoomListView = require('./room_list_view.jsx');
+var JoinRoomView = require('./join_room_view.jsx');
 
-var Nav = React.createClass({
-
+var NavView = React.createClass({
   render: function() {
     return (
-      <nav className="navbar navbar-default" role="navigation">
-        <div className="container-fluid">
-          <div className="navbar-header">
-            <a className="navbar-brand" href="#">
-              <img src="img/budha-icon.jpg" />
-            </a>
-          </div>
-          <ul className="nav navbar-nav navbar-left">
-            <li><a href="#">Lobby</a></li>
-          </ul>
-          <AuthDropdownView />
-        </div>
-      </nav>
+      <div className="col-md-2 main-nav">
+        <h4>Rooms</h4>
+        <RoomListView currentRoom={this.props.view === 'rooms' && this.props.viewArgs.roomName} />
+      </div>
     );
+    // <div className="panel-body">
+    //   <JoinRoomView />
+    // </div>
+    // <RoomListView currentRoom={this.props.currentRoom} />
+    // <JoinRoomView />
+    // <AuthDropdownView />
   }
 });
 
-module.exports = Nav;
+module.exports = NavView;

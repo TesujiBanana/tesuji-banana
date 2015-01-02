@@ -20,18 +20,8 @@ var ChatView = React.createClass({
   },
   handleKeyPress: function(e) {
     if (e.which === KEYS.enter && !e.shiftKey) {
-
-      MessageActions.createMessage({
-        room: this.props.room,
-        text: e.target.value,
-        user: this.state.currentUser,
-        createdAt: Firebase.ServerValue.TIMESTAMP
-      });
-      
-      this.setState({
-        newMessageText: ""
-      });
-      
+      MessageActions.createMessage(this.props.room, e.target.value);
+      this.setState({ newMessageText: "" });
       e.preventDefault();
     }
   },

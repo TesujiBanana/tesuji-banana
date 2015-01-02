@@ -6,7 +6,7 @@ TestUtils = React.addons.TestUtils;
 var mocha = require('mocha');
 var expect = require('chai').expect;
 
-var NavView = require('../../src/components/nav_view.jsx');
+var NavView = require('../../src/js/components/nav_view.jsx');
 
 describe('NavView', function() {
   var el;
