@@ -3,12 +3,11 @@
 var React = require("react");
 var _ = require('underscore');
 
-// var PropTypes = require("../prop_types.js");
 var firebaseRef = require("../firebase_connection.js");
 
 var MessageView = require("./message_view.jsx");
 
-var MessagesView = React.createClass({
+var MessageListView = React.createClass({
   propTypes: {
     channel: React.PropTypes.string
   },
@@ -47,4 +46,4 @@ var MessagesView = React.createClass({
   }
 });
 
-module.exports = MessagesView;
+module.exports = MessageListView;

@@ -9,7 +9,7 @@ var MainView = React.createClass({
     if (this.props.view === 'rooms') {
       return <RoomView room={this.props.viewArgs.roomName} />;
     } else {
-      return <div className="col-md-10 main">errp</div>;
+      return <div className="col-md-10 main main-viewport">errp</div>;
     }
   }
 });

@@ -2,8 +2,8 @@
 
 var React = require("react");
 
-var MessagesView = require("./messages_view.jsx");
-var NewMessageView = require("./new_message_view.jsx");
+var MessageListView = require("./message_list_view.jsx");
+var MessageInputView = require("./message_input_view.jsx");
 
 var RoomView = React.createClass({
   propTypes: {
@@ -16,9 +16,9 @@ var RoomView = React.createClass({
   render: function() {
     var channel = this._getChannel(this.props.room);
     return(
-      <div className="col-md-10 main">
-        <MessagesView channel={channel} key={channel}/>
-        <NewMessageView channel={channel} />
+      <div className="col-md-10 main main-viewport">
+        <MessageListView channel={channel} key={channel}/>
+        <MessageInputView channel={channel} />
       </div>
     );
   }

@@ -1,16 +1,19 @@
 .message-list-container {
   position: absolute;
-  height: inherit;
-  overflow-y: scroll;
-  bottom: 54px;
-
+  bottom: 0px;
+  margin-bottom: 54px;
+  max-height: calc(100% - 54px);
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
   .message-list {
+    position: relative;
     margin-bottom: 0px;
-    overflow: hidden;
-    
-    .list-group-item {
-      border: 0px;
-    }
+  }
+  
+  .list-group-item {
+    border: 0px;
   }
 }
 
