@@ -43,11 +43,16 @@ gulp.task('watch', function() {
 });
 
 gulp.task('sass', function() {
-  gulp.src('./src/sass/**/*.scss')
-    .pipe(sass())
-    .pipe(gulp.dest('./tmp/css'))
-    .pipe(concat('app.css'))
-    .pipe(gulp.dest('./dist/css'));
+  gulp.watch('./src/sass/**/*.scss', function() {
+    gulp.src('./src/sass/app.scss')
+      .pipe(sass())
+      .pipe(gulp.dest('./dist/css'));
+  });
+  // })
+  //   .pipe(sass())
+  //   .pipe(gulp.dest('./tmp/css'))
+  //   .pipe(concat('app.css'))
+  //   .pipe(gulp.dest('./dist/css'));
 });
 
 gulp.task('serve', function() {

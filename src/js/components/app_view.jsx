@@ -32,7 +32,7 @@ var App = React.createClass({
   },
   _getRouter: function() {
     return Director.Router({
-      '/rooms/:roomName': this._handleRoute.bind(this, 'rooms', ['roomName']) //function(roomName) { console.log(arguments); }
+      '/rooms/:roomName': this._handleRoute.bind(this, 'rooms', ['roomName'])
     });
   },
   _handleRoute: function(view, keys) {
@@ -55,12 +55,12 @@ var App = React.createClass({
     }
     else {
       return (
-        <div className="container-fluid">
-          <div className="row">
+        <div className="container-fluid main">
+          <div className="row main">
             <NavView view={this.state.view} viewArgs={this.state.viewArgs} />
             <MainView view={this.state.view} viewArgs={this.state.viewArgs} />
           </div>
-      
+          
         </div>
       );
     }

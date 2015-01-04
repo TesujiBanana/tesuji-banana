@@ -1,2 +1,26 @@
-body {
+@import 'colors';
+
+html, body, div#viewport {
+  height: 100%;
+  width: 100%;
 }
+
+.main {
+  height: inherit;
+  width: inherit;
+}
+
+.container-fluid.main {
+  padding: 0px;
+}
+
+.row.main {
+  margin: 0px;
+}
+  
+@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
+
+@import 'nav';
+@import 'window';
+
+@import 'chat';

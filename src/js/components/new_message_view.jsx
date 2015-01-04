@@ -3,32 +3,33 @@
 var React = require("react");
 
 var MessageActions = require("../actions/message_actions");
-var CurrentUserBinding = require('./mixins/current_user_binding.jsx');
   
 var KEYS = require("../constants/keys");
 
 var ChatView = React.createClass({
-  mixins: [CurrentUserBinding],
+  propTypes: {
+    channel: React.PropTypes.string.isRequired
+  },
   getInitialState: function() {
     return { newMessageText: "" };
   },
   componentDidMount: function() {
-    this.updateTextAreaHeight();
+    this._updateTextAreaHeight();
   },
   componentDidUpdate: function() {
-    this.updateTextAreaHeight();
+    this._updateTextAreaHeight();
   },
-  handleKeyPress: function(e) {
+  _handleKeyPress: function(e) {
     if (e.which === KEYS.enter && !e.shiftKey) {
-      MessageActions.createMessage(this.props.room, e.target.value);
+      MessageActions.createTextMessage(this.props.channel, e.target.value);
       this.setState({ newMessageText: "" });
       e.preventDefault();
     }
   },
-  handleChange: function(e) { 
+  _handleChange: function(e) { 
     this.setState({newMessageText: e.target.value});
   },
-  computeTextAreaHeight: function(el) {
+  _computeTextAreaHeight: function(el) {
     var styles = window.getComputedStyle(el);
         
     var lineHeight = parseInt(styles.lineHeight);
@@ -37,9 +38,9 @@ var ChatView = React.createClass({
     
     el.style.height = '0px';
     el.scrollTop = 0;
-    el.scrollTop = 10000;
+    el.scrollTop = 9999;
     var scrollHeight = parseInt(el.scrollTop);
-      
+  
     var calculatedHeight = lineHeight + scrollHeight + 14;
 
     if (calculatedHeight < minHeight) {
@@ -50,16 +51,16 @@ var ChatView = React.createClass({
       return calculatedHeight;
     }
   },
-  updateTextAreaHeight: function() {
+  _updateTextAreaHeight: function() {
     var textArea = this.getDOMNode().firstChild.firstChild;
-    var textAreaHeight = this.computeTextAreaHeight(textArea);
+    var textAreaHeight = this._computeTextAreaHeight(textArea);
     textArea.style.height = textAreaHeight + 'px';
   },
   render: function() {
     return(
-      <div className="panel-footer">
-        <div>
-          <textarea className="form-control" value={this.state.newMessageText} onChange={this.handleChange} onKeyPress={this.handleKeyPress} />
+      <div className="row message-input">
+        <div className="message-input-holder">
+          <textarea className="form-control" value={this.state.newMessageText} onChange={this._handleChange} onKeyPress={this._handleKeyPress} />
         </div>
       </div>
     );
