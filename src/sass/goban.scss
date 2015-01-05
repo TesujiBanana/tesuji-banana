@@ -1,0 +1,161 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(https://themes.googleusercontent.com/static/fonts/opensans/v8/cJZKeOuBrn4kERxqtaUH3bO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+
+@mixin transform($value...) {
+  -webkit-transform: $value;
+  -moz-transform: $value;
+  -o-transform: $value;
+  transform: $value;
+}
+
+@mixin gradient($args...) {
+  background: -webkit-linear-gradient($args); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient($args); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient($args); /* For Firefox 3.6 to 15 */
+  background: linear-gradient($args); /* Standard syntax */
+}
+
+// @include reactive(30); 
+$multiple: 30;
+
+// @mixin reactive($multiple) {
+.tesuji-board {
+  position: relative;
+  margin: 12px;
+  background-color: #ffcc66;
+  height: ($multiple * 20) + px;
+  width: ($multiple * 20) + px;
+  
+  .tesuji-grid {
+    position: absolute;
+    margin: ($multiple/2) + px;
+    height: ($multiple * 19) + px;
+    width: ($multiple * 19) + px;
+    z-index: 2;
+
+    table {
+      position: absolute;
+      z-index: 0;
+      left: ($multiple/2) + px;
+      top: ($multiple/2) + px;
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    td {
+      height: ($multiple) + px;
+      width: ($multiple) + px;
+      border: 1px solid black;
+      padding: 0px;
+    }
+    
+    .goban-label {
+        position: absolute;
+        z-index: 1;
+        // font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+        font-size: ($multiple/3 - 1) + px;
+        text-align: center;
+        color: black;
+        padding: 0px;
+    }
+
+    @for $i from 0 through 18 {
+      $offset-x: $multiple * 18 - ($multiple * $i) + px;
+      $offset-y: ($multiple * $i) + px;
+
+      .goban-label-top-#{$i} {
+        @extend .label;
+        height: ($multiple/2) + px;
+        width: ($multiple) + px;
+        padding-top: ($multiple/10) + px;
+        @include transform(translate($offset-y, (-1 * $multiple/2) + px));
+      }
+      .goban-label-bottom-#{$i} {
+        @extend .label;
+        height: ($multiple/2) + px;
+        width: ($multiple) + px;
+        @include transform(translate($offset-y, ($multiple * 19) + px));
+      }
+      .goban-label-left-#{$i} {
+        @extend .label;
+        height: ($multiple) + px;
+        width: ($multiple/2) + px;
+        padding-top: ($multiple/3) + px;
+        @include transform(translate((-1 * $multiple/2) + px, $offset-x));
+      }
+      .goban-label-right-#{$i} {
+        @extend .label;
+        height: $multiple + px;
+        width: ($multiple/2) + px;
+        padding-top: ($multiple/3) + px;
+        @include transform(translate(($multiple * 19) + px, $offset-x));
+      }
+    }
+    
+    .goban-dot {
+      position: absolute;
+      top: ($multiple/2 - 2 ) + px; //13px;
+      left: ($multiple/2 - 2 ) + px;
+      height: 5px;
+      width: 5px;
+      background-color: black;
+    }
+  }
+  .goban-intersections {
+    position: absolute;
+    margin: ($multiple/2) + px;
+    height: ($multiple * 19) + px;
+    width: ($multiple * 19) + px;
+    z-index: 3;
+  
+    .goban-intersection {
+      position: absolute;
+      z-index: 3;
+      height: $multiple + px;
+      width: $multiple + px;
+
+      .stone {
+        position: absolute;
+        top: ($multiple/10) + px;
+        left: ($multiple/10) + px;
+        height: ($multiple * .8) + px;
+        width: ($multiple * .8) + px;
+        border-radius: 50%;
+        &.preview {
+          opacity: 0.4;
+          z-index: 2;
+        }
+        &.black {
+          @include gradient(285deg, black, #505050);
+          z-index: 3;
+        }
+        &.white {
+          @include gradient(285deg, #D0D0D0, white);
+          z-index: 3;
+        }
+        &.shadow {
+          top: ($multiple/10) + ($multiple/20) + px;
+          left: ($multiple/10) + ($multiple/20) + px;
+          opacity: 0.2;
+          background-color: black;
+          z-index: 2;
+        }
+      }
+    }
+  }
+  
+  @for $i from 0 through 18 {
+    @for $j from 0 through 18 {
+      $offset-x: ($multiple * $i) + px;
+      $offset-y: $multiple * (18 - $j) + px;
+
+      .goban-intersection-#{$i}-#{$j} {
+        @include transform(translate($offset-x, $offset-y));
+      }
+    }
+  }
+}

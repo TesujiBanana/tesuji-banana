@@ -32,6 +32,7 @@ var App = React.createClass({
   },
   _getRouter: function() {
     return Director.Router({
+      '/games/:gameId': this._handleRoute.bind(this, 'games', ['gameId']),
       '/rooms/:roomName': this._handleRoute.bind(this, 'rooms', ['roomName'])
     });
   },
