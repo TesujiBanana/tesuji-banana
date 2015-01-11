@@ -29,11 +29,14 @@ var _ = require('underscore');
 
 var GridView = require('./grid_view.jsx');
 var IntersectionsView = require('./intersections_view.jsx');
+var StoneView = require('./stone_view.jsx');
+
 
 var BoardView = React.createClass({
   propTypes: {
+    // gameId: React.PropTypes.string.isRequired
     onIntersectionClick: React.PropTypes.func.isRequired,
-
+    
     // board: React.PropTypes.instanceOf(Board).isRequired,
     // current_turn: React.PropTypes.number,
   },
@@ -42,17 +45,11 @@ var BoardView = React.createClass({
     var board_size = this.props.board.board_size;
     return(
       <div className='tesuji-board'>
-        <GridView board_size={board_size} />
-        <IntersectionsView
-          board={this.props.board}
-          onIntersectionClick={this.props.onIntersectionClick} />
+        <GridView board_size={board_size}>
+          <StoneView color='1' x='4' y='4' />        
+        </GridView>
       </div>
     );
-    // 
-    // <IntersectionsView
-    //   board={this.props.board}
-    //   current_turn={this.props.current_turn}
-    //   onIntersectionClick={this.props.onIntersectionClick} />
   }
 });
 

@@ -34,7 +34,7 @@ var GridView = React.createClass({
 
   render: function() {
     var board_size = this.props.board_size;
-
+    
     return (
       <div className='tesuji-grid'>
         <table>
@@ -74,6 +74,8 @@ var GridView = React.createClass({
           var y = 3 + 2 * (i - (i % 3)); // / 3;
           return (<div className={'goban-dot goban-intersection-' + x + '-' + y } key={i} />)
         })}
+        
+        {this.props.children}
       </div>
     );
   }

@@ -98,60 +98,56 @@ $multiple: 30;
     
     .goban-dot {
       position: absolute;
-      top: ($multiple/2 - 2 ) + px; //13px;
-      left: ($multiple/2 - 2 ) + px;
+      top: -2px;
+      left: -2px;
       height: 5px;
       width: 5px;
       background-color: black;
     }
   }
   .goban-intersections {
-    position: absolute;
-    margin: ($multiple/2) + px;
-    height: ($multiple * 19) + px;
-    width: ($multiple * 19) + px;
-    z-index: 3;
-  
     .goban-intersection {
       position: absolute;
-      z-index: 3;
       height: $multiple + px;
       width: $multiple + px;
+    }
+  }
 
-      .stone {
-        position: absolute;
-        top: ($multiple/10) + px;
-        left: ($multiple/10) + px;
-        height: ($multiple * .8) + px;
-        width: ($multiple * .8) + px;
-        border-radius: 50%;
-        &.preview {
-          opacity: 0.4;
-          z-index: 2;
-        }
-        &.black {
-          @include gradient(285deg, black, #505050);
-          z-index: 3;
-        }
-        &.white {
-          @include gradient(285deg, #D0D0D0, white);
-          z-index: 3;
-        }
-        &.shadow {
-          top: ($multiple/10) + ($multiple/20) + px;
-          left: ($multiple/10) + ($multiple/20) + px;
-          opacity: 0.2;
-          background-color: black;
-          z-index: 2;
-        }
-      }
+  .stone {
+    position: absolute;
+    top: ($multiple * -0.4) + px;
+    left: ($multiple * -0.4) + px;
+    height: ($multiple * .8) + px;
+    width: ($multiple * .8) + px;
+    border-radius: 50%;
+    &.preview {
+      opacity: 0.4;
+      z-index: 2;
+    }
+    &.black {
+      @include gradient(285deg, black, #505050);
+      opacity: 1;
+      z-index: 3;
+    }
+    &.white {
+      @include gradient(285deg, #D0D0D0, white);
+      opacity: 1;
+      z-index: 3;
+    }
+    &.shadow {
+      position: relative;
+      top: ($multiple * -0.4) + ($multiple * 0.08) + px;
+      left: ($multiple * -0.4) + ($multiple * 0.08) + px;
+      opacity: 0.2;
+      background-color: black;
+      z-index: 2;
     }
   }
   
   @for $i from 0 through 18 {
     @for $j from 0 through 18 {
-      $offset-x: ($multiple * $i) + px;
-      $offset-y: $multiple * (18 - $j) + px;
+      $offset-x: (15 + ($multiple * $i)) + px;
+      $offset-y: (15 + ($multiple * (18 - $j))) + px;
 
       .goban-intersection-#{$i}-#{$j} {
         @include transform(translate($offset-x, $offset-y));

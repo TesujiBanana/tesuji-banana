@@ -4,11 +4,9 @@ var _ = require('underscore');
 
 var AppDispatcher = require('../dispatcher/app_dispatcher');
 
-var firebaseRef = require('../firebase_connection.js')
+var firebaseRef = require('../firebase_connection.js');
 
-var MessageTypes = {
-  TEXT: 'MESSAGE.TEXT'
-};
+var MessageTypes = require('../constants/message_types');
 
 // TODO: move the dispatcher to its own file
 var MessageDispatcher = {
@@ -27,5 +25,14 @@ module.exports = {
       type: MessageTypes.TEXT,
       text: text
     });
+  },
+  createMoveMessage: function(channel, gameId, x, y) {
+    MessageDispatcher.dispatch(channel, {
+      type: MessageTypes.MOVE,
+      gameId: gameId,
+      x: x,
+      y: y
+    });
   }
+  
 };

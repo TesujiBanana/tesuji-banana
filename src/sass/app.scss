@@ -18,6 +18,10 @@ html, body, div#viewport {
   margin: 0px;
 }
 
+.main-vieport {
+  padding: 0px;
+}
+
 // .row.main.main-viewport {
 //   overflow: hidden;
 // }
@@ -28,4 +32,5 @@ html, body, div#viewport {
 @import 'window';
 
 @import 'chat';
+@import 'game';
 @import 'goban';
