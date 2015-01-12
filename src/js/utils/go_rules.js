@@ -127,6 +127,7 @@ var Rules = {
     }
 
     // TODO: validate current player
+    // console.log(old_board.currentTurn, move.color);
 
     // create and place the new stone
     var new_stone = new Stone(move);
