@@ -2,8 +2,8 @@
 
 var _ = require('underscore');
 
-// var Stone = require('../models/stone.js');
-// var Board = require('../models/board.js');
+var Stone = require('../models/stone.js');
+var Board = require('../models/board.js');
 
 var InvalidMoveException = function InvalidMoveException(message) {
    this.message = message;
@@ -12,7 +12,7 @@ var InvalidMoveException = function InvalidMoveException(message) {
 
 var Rules = {
   coordinatesOutOfBounds: function(board, x, y) {
-    return (x < 0 || x >= board.board_size || y < 0 || y >= board.board_size);
+    return (x < 0 || x >= board.boardSize || y < 0 || y >= board.boardSize);
   },
   stoneAt: function(board, x, y) {
     if (this.coordinatesOutOfBounds(board, x, y)) { return undefined }
@@ -26,10 +26,11 @@ var Rules = {
       this.stoneAt(board, stone.x, stone.y - 1)
     ];
   },
-  getBoardOverlay: function(board, stones) {
+  getBoardOverlay: function(board, new_stones) {
+    var stones = (new_stones !== undefined) ? new_stones : board.stones;
     return _.object(
       stones.map(function(stone) {
-        return stone.x + (board.board_size * stone.y);
+        return stone.x + (board.boardSize * stone.y);
       }.bind(this)),
       stones
     );
@@ -45,10 +46,11 @@ var Rules = {
 
     if (valid_stones.length === 0) { return null }
 
-    return { //new Board({
-      board_size: board.board_size,
-      stones: board.stones.concat(valid_stones)
-    }; //);
+    return new Board({
+      boardSize: board.boardSize,
+      stones: board.stones.concat(valid_stones),
+      currentTurn: 1 - board.currentTurn
+    });
   },
   removeStones: function(board) {
     var args = _.flatten(arguments).slice(1);
@@ -62,10 +64,10 @@ var Rules = {
 
     if (valid_stones.length === 0) { return board }
 
-    return { 
-      board_size: board.board_size,
+    return new Board({ 
+      boardSize: board.boardSize,
       stones: _.values(_.omit(this.getBoardOverlay(board, board.stones), _.keys(this.getBoardOverlay(board, valid_stones))))
-    };
+    });
   },
   findKills: function(board, stone) {
     return _.reduce(
@@ -74,25 +76,26 @@ var Rules = {
       }),
       function(dead_stones, seed_stone) {
         if (_.contains(dead_stones, seed_stone)) { return dead_stones }
-        return dead_stones.concat(this.findDeadStones(board, board, seed_stone));
+        return dead_stones.concat(this.findDeadStones(board, seed_stone));
       }.bind(this),
       []
     );
   },
   findDeadStones: function(board, stone) {
-    return (function _findDeadStones(board, queue, group) {
+    var _findDeadStones = function(board, queue, group) {
       // if there is nothing left to check, we are dead.
       if (queue.length === 0) { return group }
 
-      var stone = queue[0];
-      var neighbors = this.getNeighboringStones(board, stone);
+      var stone = queue[0],
+          rest = queue.slice(1),
+          neighbors = this.getNeighboringStones(board, stone);
 
       // if we find a null (empty) neighbor, we are alive.
       if (neighbors.indexOf(null) >= 0) { return [] }
 
       // call self with friendly neighbors added to queue and stone added to group.
       return _findDeadStones(board,
-        queue.slice(1).concat(neighbors.filter(function(neighbor_stone) {
+        rest.concat(neighbors.filter(function(neighbor_stone) {
           return (
             (neighbor_stone && stone.color === neighbor_stone.color) &&
             !_.contains(group, neighbor_stone)
@@ -100,7 +103,8 @@ var Rules = {
         })),
         group.concat(stone)
       );
-    }.bind(this))(board, [stone], []);
+    }.bind(this);
+    return _findDeadStones(board, [stone], []);
   },
   getBoard: function(board_history, moves) {
     if (moves.length === 0) {
@@ -125,15 +129,16 @@ var Rules = {
     // TODO: validate current player
 
     // create and place the new stone
-    // var new_stone = new Stone(move);
-    var new_board = this.placeStones(old_board, move);
+    var new_stone = new Stone(move);
+    var new_board = this.placeStones(old_board, new_stone);
 
     // find dead stones and remove them
-    var kills = this.findKills(new_board, move);
+    var kills = this.findKills(new_board, new_stone);
+    // console.log(kills);
     new_board = this.removeStones(new_board, kills);
 
     // check suicide
-    if (this.checkSuicide(new_board, move)) {
+    if (this.checkSuicide(new_board, new_stone)) {
       throw new InvalidMoveException('stone placed in suicide');
     }
 
@@ -155,8 +160,8 @@ var Rules = {
     return board_history.some(function(old_board) {
       // TODO: bloom filter ...
       return new_board.stones.length === old_board.stones.length &&
-        _.isEqual(old_board.getOverlay(), new_board.getOverlay());
-    });
+        _.isEqual(this.getBoardOverlay(old_board), this.getBoardOverlay(new_board));
+    }.bind(this));
   },
 };
 

@@ -1,21 +1,20 @@
 "use strict";
 
 var React = require("react");
+var Firebase = require("firebase");
 var _ = require('underscore');
-
-var firebaseRef = require("../firebase_connection.js");
 
 var MessageView = require("./message_view.jsx");
 
 var MessageListView = React.createClass({
   propTypes: {
-    channel: React.PropTypes.string
+    fbRef: React.PropTypes.instanceOf(Firebase).isRequired
   },
   getInitialState: function() {
     return { messages: [] };
   },
   componentWillMount: function() {
-    this.messagesRef = this._getMessagesRef(this.props.channel).limitToLast(100);
+    this.messagesRef = this.props.fbRef.limitToLast(100);
     this.messagesRef.on("value", this._handleMessages);
   },
   componentWillUnmount: function() {
@@ -27,19 +26,17 @@ var MessageListView = React.createClass({
       messagesDiv.lastChild.scrollIntoView();
     }
   },
-  _getMessagesRef: function(channel) {
-    return firebaseRef.child("channels").child(channel).child("messages");
+  _handleMessages: function(data) {
+    this.setState({ messages: _.keys(data.val()) });
   },
-  _handleMessages: function(dataSnapshot) {
-    this.setState({ messages: _.keys(dataSnapshot.val()) });
-  },
-
   render: function() {
-    var channel = this.props.channel;
     return(
       <div className="row message-list-container">
         <div className="message-list list-group" id="messages">
-          {this.state.messages.map(function(messageId, i) { return(<MessageView channel={channel} key={messageId} messageId={messageId} />) })}
+          {this.state.messages.map(function(messageId) { 
+            var ref = this.props.fbRef.child(messageId);
+            return <MessageView fbRef={ref} key={messageId} />
+          }.bind(this))}
         </div>
       </div>
     );

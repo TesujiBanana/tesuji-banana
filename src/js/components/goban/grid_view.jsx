@@ -29,20 +29,20 @@ var _ = require('underscore');
 
 var GridView = React.createClass({
   propTypes: {
-    board_size: React.PropTypes.number.isRequired
+    boardSize: React.PropTypes.number.isRequired
   },
 
   render: function() {
-    var board_size = this.props.board_size;
+    var boardSize = this.props.boardSize;
     
     return (
       <div className='tesuji-grid'>
         <table>
           <tbody>
-            {_.times(board_size-1, function(i) {
+            {_.times(boardSize-1, function(i) {
               return (
                 <tr key={i}>
-                  {_.times(board_size-1, function(j) {
+                  {_.times(boardSize-1, function(j) {
                     return(
                       <td key={j}>&nbsp;</td>
                     )
@@ -53,23 +53,23 @@ var GridView = React.createClass({
           </tbody>
         </table>
 
-        {_.times(board_size, function(i) {
+        {_.times(boardSize, function(i) {
           var label = "ABCDEFGHJKLMNOPQRST".charAt(i);
           return (<div className={'goban-label goban-label-top-' + (i)} key={i}>{label}</div>)
         })}
-        {_.times(board_size, function(i) {
+        {_.times(boardSize, function(i) {
           var label = "ABCDEFGHJKLMNOPQRST".charAt(i);
           return (<div className={'goban-label goban-label-bottom-' + (i)} key={i}>{label}</div>)
         })}
-        {_.times(board_size, function(i) {
+        {_.times(boardSize, function(i) {
           return (<div className={'goban-label goban-label-left-' + (i)} key={i}>{i+1}</div>)
         })}
-        {_.times(board_size, function(i) {
+        {_.times(boardSize, function(i) {
           return (<div className={'goban-label goban-label-right-' + (i)} key={i}>{i+1}</div>)
         })}
 
         {_.times(9, function(i) {
-          // TODO: make dot arrangement a function of board_size ... 
+          // TODO: make dot arrangement a function of boardSize ... 
           var x = 3 + 6 * (i % 3);
           var y = 3 + 2 * (i - (i % 3)); // / 3;
           return (<div className={'goban-dot goban-intersection-' + x + '-' + y } key={i} />)

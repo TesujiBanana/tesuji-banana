@@ -29,17 +29,6 @@ var RoomActions = {
           }
         }
       );
-    // console.log(firebaseRef.getAuth().uid);
-    // console.log(roomName);
-    // firebaseRef
-    //   .child("rooms")
-    //   .orderByChild("name")
-    //   .equalTo(roomName)
-    //   .limitToFirst(1)
-    //   .once("value", function(dataSnapshot) {
-    //     console.log(dataSnapshot.val());
-    // }, function()
-    // );
   }
 };
 

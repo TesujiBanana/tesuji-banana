@@ -1,28 +1,23 @@
 "use strict";
 
 var React = require("react");
-var firebaseRef = require("../firebase_connection.js");
+var Firebase = require("firebase");
 
 var MessageView = React.createClass({
   propTypes: {
-    channel: React.PropTypes.string.isRequired,
-    messageId: React.PropTypes.string.isRequired
+    fbRef: React.PropTypes.instanceOf(Firebase).isRequired
   },
   getInitialState: function() {
-    return { message: '' }
+    return { message: {} }
   },
   componentWillMount: function() {
-    this.messageRef = this._getMessageRef(this.props.channel, this.props.messageId);
-    this.messageRef.on("value", this._handleMessage);
+    this.props.fbRef.on("value", this._handleMessage);
   },
   componentWillUnmount: function() {
-    this.messageRef.off("value", this._handleMessage);
+    this.props.fbRef.off("value", this._handleMessage);
   },
-  _getMessageRef: function(channel, messageId) {
-    return firebaseRef.child("channels").child(channel).child("messages").child(messageId);
-  },
-  _handleMessage: function(dataSnapshot) {
-    this.setState({ message: dataSnapshot.val() });
+  _handleMessage: function(data) {
+    this.setState({ message: data.val() });
   },
   render: function() {
     // var formattedTimeStamp = (new Date(this.props.message.createdAt)).toLocaleTimeString();
@@ -30,8 +25,7 @@ var MessageView = React.createClass({
       <div className="list-group-item">
         {JSON.stringify(this.state.message)}
       </div>  
-    );
-    
+    );  
     // <h5 className="list-group-item-heading">
     //   {this.props.message.displayName} <small>{formattedTimeStamp}</small>
     // </h5>

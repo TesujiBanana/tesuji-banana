@@ -105,12 +105,11 @@ $multiple: 30;
       background-color: black;
     }
   }
-  .goban-intersections {
-    .goban-intersection {
-      position: absolute;
-      height: $multiple + px;
-      width: $multiple + px;
-    }
+  
+  .goban-intersection {
+    position: absolute;
+    height: $multiple + px;
+    width: $multiple + px;
   }
 
   .stone {

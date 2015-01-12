@@ -5,20 +5,21 @@ var React = require("react");
 var MessageListView = require("./message_list_view.jsx");
 var MessageInputView = require("./message_input_view.jsx");
 
+var firebaseRef = require("../firebase_connection.js");
+
 var RoomView = React.createClass({
   propTypes: {
-    room: React.PropTypes.string.isRequired
+    roomId: React.PropTypes.string.isRequired
   },
-  _getChannel: function(room) {
-    // TODO: determine if we should just pass the full path, since it should be the same
-    return "/rooms/" + room;
+  _getRef: function(roomId) {
+    return firebaseRef.child("rooms").child(roomId).child("messages");
   },
   render: function() {
-    var channel = this._getChannel(this.props.room);
+    var ref = this._getRef(this.props.roomId);
     return(
       <div className="col-md-10 main main-viewport">
-        <MessageListView channel={channel} key={channel}/>
-        <MessageInputView channel={channel} />
+        <MessageListView fbRef={ref} />
+        <MessageInputView fbRef={ref} />
       </div>
     );
   }

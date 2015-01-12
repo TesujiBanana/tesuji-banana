@@ -35,12 +35,12 @@ var IntersectionsView = React.createClass({
   },
 
   render: function() {
-    var board_size = 19;
+    var boardSize = 19;
     return (
       <div className='goban-intersections' onClick={this.onClick}>
-        {_.times( board_size * board_size, function(i) {
-          var x = i % board_size;
-          var y = (i - x) / board_size;
+        {_.times( boardSize * boardSize, function(i) {
+          var x = i % boardSize;
+          var y = (i - x) / boardSize;
           var stone = GoRules.stoneAt(this.props.board, x, y);
           console.log(stone);
           // var preview = (this.state.cursor_position.x === x && this.state.cursor_position.y === y) ?

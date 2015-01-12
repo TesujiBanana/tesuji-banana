@@ -11,7 +11,7 @@ var NavView = React.createClass({
     return (
       <div className="col-md-2 main nav">
         <h4>Rooms</h4>
-        <RoomListView currentRoom={this.props.view === 'rooms' && this.props.viewArgs.roomName} />
+        <RoomListView currentRoom={this.props.view === 'rooms' && this.props.viewArgs.Id} />
         <AuthDropdownView />
       </div>
     );

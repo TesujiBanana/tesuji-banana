@@ -1,14 +1,17 @@
 "use strict";
 
 var React = require("react");
+var Firebase = require("firebase");
+
 var MessageActions = require("../actions/message_actions");
 var AutoresizeTextarea = require("./mixins/autoresize_textarea");
 var KEYS = require("../constants/keys");
 
+
 var MessageInputView = React.createClass({
   mixins: [AutoresizeTextarea],
   propTypes: {
-    channel: React.PropTypes.string.isRequired
+    fbRef: React.PropTypes.instanceOf(Firebase).isRequired
   },
   getInitialState: function() {
     return { newMessageText: "" };
@@ -23,7 +26,7 @@ var MessageInputView = React.createClass({
   },
   _handleKeyPress: function(e) {
     if (e.which === KEYS.enter && !e.shiftKey) {
-      MessageActions.createTextMessage(this.props.channel, e.target.value);
+      MessageActions.createTextMessage(this.props.fbRef, e.target.value);
       this.setState({ newMessageText: "" });
       e.preventDefault();
     }

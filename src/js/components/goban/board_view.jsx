@@ -1,28 +1,5 @@
-/*******************************************************************************
- * Copyright (c) 2014 Chris Papazian
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * @jsx React.DOM
- */
-
 var React = require('react');
+var Firebase = require("firebase");
 var _ = require('underscore');
 
 // var Board = require('../models/board.js');
@@ -31,22 +8,74 @@ var GridView = require('./grid_view.jsx');
 var IntersectionsView = require('./intersections_view.jsx');
 var StoneView = require('./stone_view.jsx');
 
+var MessageActions = require("../../actions/message_actions");
+var MessageTypes = require('../../constants/message_types');
+
+// var Move = require('../../models/move.js');
+var Stone = require('../../models/stone.js');
+var Board = require('../../models/board.js');
+var GoRules = require("../../utils/go_rules");
+
 
 var BoardView = React.createClass({
   propTypes: {
-    // gameId: React.PropTypes.string.isRequired
-    onIntersectionClick: React.PropTypes.func.isRequired,
+    fbRef: React.PropTypes.instanceOf(Firebase).isRequired
+  },
+  getInitialState: function() {
+    return { boardHistory: [new Board()] };
+  },
+  componentWillMount: function() {
+    this.movesRef = this.props.fbRef.child("moves");
+    this.movesRef.on("child_added", this._handleMove);
+  },
+  componentWillUnmount: function() {
+    this.movesRef.off("value", this._handleMessages);
+  },
+  _handleMove: function(data, prevData) {
+    var move = _.pick(data.val(), 'x', 'y', 'color');
+    var newBoard = GoRules.playMove(this.state.boardHistory, move);
+    if (newBoard) {
+      this.setState({ boardHistory: this.state.boardHistory.concat(newBoard) });
+    }
+  },
+  _getRelativePosition: function(position, element) {
+    var localRelativePosition = { 
+      x: position.x - element.offsetLeft - element.scrollLeft + element.clientLeft,
+      y: position.y - element.offsetTop - element.scrollTop + element.clientTop
+    };
     
-    // board: React.PropTypes.instanceOf(Board).isRequired,
-    // current_turn: React.PropTypes.number,
+    if (element.offsetParent) {
+      return this._getRelativePosition(localRelativePosition, element.offsetParent);
+    } else {
+      return localRelativePosition;
+    }
+  },
+  _getIntersection: function(position, boardPixelSize, boardSize) { 
+    var boardScale = boardPixelSize / 20;
+  
+    return {
+      x: parseInt((position.x - (boardScale / 2)) / boardScale),
+      y: boardSize - 1 - parseInt((position.y - (boardScale / 2)) / boardScale)
+    };
+  },
+  _handleClick: function(e) { 
+    var position = this._getRelativePosition({x: e.clientX, y: e.clientY}, e.currentTarget);
+    var intersection = this._getIntersection(position, e.currentTarget.clientWidth, 19);
+    
+    var board = this.state.boardHistory[this.state.boardHistory.length - 1];
+    var move = _.extend(intersection, { color: board.currentTurn })
+    
+    if (GoRules.playMove(this.state.boardHistory, move)) {
+      MessageActions.createNewMove(this.movesRef, move); //intersection.x, intersection.y, this.state.board.currentTurn);
+    }
   },
 
   render: function() {
-    var board_size = this.props.board.board_size;
+    var board = this.state.boardHistory[this.state.boardHistory.length - 1];
     return(
-      <div className='tesuji-board'>
-        <GridView board_size={board_size}>
-          <StoneView color='1' x='4' y='4' />        
+      <div className='tesuji-board' onClick={this._handleClick}>
+        <GridView boardSize={board.boardSize}>
+          {board.stones.map(function(stone, i) { return <StoneView stone={stone} key={i}/> })}
         </GridView>
       </div>
     );
